@@ -1,6 +1,5 @@
 #!/bin/bash
 # Clone paddles and teuthology
-
 git clone https://github.com/ceph/paddles.git
 cd paddles
 cd ../
@@ -18,5 +17,10 @@ fi
 # Copy Docker file into teuthology
 cp ./Dockerfile teuthology/.
 
-# docker-compose
+# Generate an SSH keypair to use
+SSH_PRIVKEY_PATH=$(mktemp -u /tmp/teuthology-ssh-key-XXXXXX)
+ssh-keygen -t ed25519 -N '' -f $SSH_PRIVKEY_PATH
+export SSH_PRIVKEY=$(cat $SSH_PRIVKEY_PATH)
+export SSH_PUBKEY=$(cat $SSH_PRIVKEY_PATH.pub)
+
 docker-compose up --build
