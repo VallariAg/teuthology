@@ -61,7 +61,7 @@ services:
   teuthology:
     build: ./teuthology
     depends_on:
-        pulpito:
+        paddles:
             condition: service_healthy
     links:
         - paddles
