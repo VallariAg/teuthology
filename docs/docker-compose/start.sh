@@ -1,8 +1,4 @@
 #!/bin/bash
-# Clone paddles and teuthology
-git clone https://github.com/ceph/paddles.git
-cd paddles
-cd ../
 git clone \
   --depth 1 \
   -b ${TEUTHOLOGY_BRANCH:-$(git branch --show-current)} \
