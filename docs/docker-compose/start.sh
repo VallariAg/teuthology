@@ -1,4 +1,8 @@
 #!/bin/bash
+set -ex
+if [ -z "$TEUTHOLOGY_BRANCH" -a -n "$GITHUB_HEAD_REF" ]; then
+    TEUTHOLOGY_BRANCH=${GITHUB_HEAD_REF}
+fi
 git clone \
   --depth 1 \
   -b ${TEUTHOLOGY_BRANCH:-$(git branch --show-current)} \
