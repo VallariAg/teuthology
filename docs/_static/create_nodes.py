@@ -10,10 +10,10 @@ import sys
 from teuthology.orchestra.remote import Remote
 from teuthology.lock.ops import update_inventory
 
-paddles_url = 'http://paddles.example.com/nodes/'
+paddles_url = 'http://paddles:8080'
 
-machine_type = 'typica'
-lab_domain = 'example.com'
+machine_type = 'smithi'
+lab_domain = 'front.sepia.ceph.com'
 # Don't change the user. It won't work at this time.
 user = 'ubuntu'
 # We are populating 'typica003' -> 'typica192'
