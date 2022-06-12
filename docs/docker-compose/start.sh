@@ -1,5 +1,11 @@
 #!/bin/bash
 set -e
+export TESTNODES="smithi086.front.sepia.ceph.com,smithi075.front.sepia.ceph.com,smithi047.front.sepia.ceph.com"
+export MACHINE_TYPE="smithi"
+export SSH_PRIVKEY_PATH=$HOME/.ssh/id_rsa
+# smithi_YAML=`cat ./vallari-setup/smithi.yaml`
+# sepia_HOST=`cat ./vallari-setup/hosts`
+
 export TEUTHOLOGY_BRANCH=${TEUTHOLOGY_BRANCH:-$(git branch --show-current)}
 export TEUTH_BRANCH=${TEUTHOLOGY_BRANCH}
 if [ -n "$ANSIBLE_INVENTORY_REPO" ]; then

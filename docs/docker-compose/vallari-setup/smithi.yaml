@@ -1,0 +1,27 @@
+volume_groups:
+  vg_nvme:
+    pvs: "/dev/nvme0n1"
+
+logical_volumes:
+  lv_1:
+    vg: vg_nvme
+    size: "89.4G"
+    scratch_dev: true
+  lv_2:
+    vg: vg_nvme
+    size: "89.4G"
+    scratch_dev: true
+  lv_3:
+    vg: vg_nvme
+    size: "89.4G"
+    scratch_dev: true
+  lv_4:
+    vg: vg_nvme
+    size: "89.4G"
+    scratch_dev: true
+  lv_5:
+    vg: vg_nvme
+    size: "14.9G"
+
+# Mounts /var/lib/ceph here
+var_lib_partition: "/dev/vg_nvme/lv_5"
