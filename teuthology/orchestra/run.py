@@ -88,6 +88,7 @@ class RemoteProcess(object):
         self._wait = wait
         self.logger = logger or log
         self.scan_tests_errors = scan_tests_errors
+        ErrorScanner().change_flag_class(new_flag=self.command)
 
     def execute(self):
         """
@@ -238,6 +239,7 @@ class ErrorScanner(object):
     Scan for unit tests errors in teuthology.log 
     """
     __flag__ = 0
+    _flag_class = None
     def __init__(self):
         self.ERROR_PATTERNS = {
             "prev_detected": [re.compile(r"UnitTestError")],
@@ -248,6 +250,11 @@ class ErrorScanner(object):
             "gtest":  [re.compile(r"\[\s\sFAILED\s\s\]")],
         }
     
+    def change_flag_class(self, new_flag):
+        log.debug("Old _flag_class value: {f}".format(f=ErrorScanner._flag_class))
+        ErrorScanner._flag_class = new_flag
+        log.debug("New _flag_class value: {f}".format(f=ErrorScanner._flag_class))
+
     def _search_error(self, line, test):
         test_patterns = self.ERROR_PATTERNS[test]
 
