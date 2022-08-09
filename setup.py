@@ -5,6 +5,8 @@ module_file = open("teuthology/__init__.py").read()
 metadata = dict(re.findall(r"__([a-z]+)__\s*=\s*['\"]([^'\"]*)['\"]", module_file))
 long_description = open('README.rst').read()
 
+print(metadata)
+
 setup(
     name='teuthology',
     version=metadata['version'],
