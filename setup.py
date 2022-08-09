@@ -9,7 +9,7 @@ print(metadata)
 
 setup(
     name='teuthology',
-    version=metadata['version'],
+    # version=metadata['version'],
     packages=find_packages(),
     package_data={
      'teuthology.task': ['adjust-ulimits', 'edit_sudoers.sh', 'daemon-helper'],
