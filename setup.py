@@ -63,6 +63,7 @@ setup(
                       # teuthology/__init__.py
                       'paramiko',
                       'psutil >= 2.1.0',
+                      'lupa',
                       'configparser',
                       'ansible>=2.0',
                       'prettytable',
