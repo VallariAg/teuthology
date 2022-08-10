@@ -31,6 +31,9 @@ setup(
          'openstack.yaml',
          'setup-openstack.sh'
      ],
+     'teuthology.suite': ['fragment-merge.lua'],
+     'teuthology.task.install': ['adjust-ulimits', 'daemon-helper'],
+     'teuthology.task.internal': ['edit_sudoers.sh']
     },
     author='Inktank Storage, Inc.',
     author_email='ceph-qa@ceph.com',
