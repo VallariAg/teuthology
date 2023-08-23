@@ -15,10 +15,10 @@ else
     CUSTOM_CONF=/teuthology/containerized_node.yaml
 fi
 export MACHINE_TYPE=${MACHINE_TYPE:-testnode}
-if [ -z "$TEUTHOLOGY_WAIT" ]; then
-    if [ -n "$TEUTH_BRANCH" ]; then
-      TEUTH_BRANCH_FLAG="--teuthology-branch $TEUTH_BRANCH"
-    fi
+# if [ -z "$TEUTHOLOGY_WAIT" ]; then
+#     if [ -n "$TEUTH_BRANCH" ]; then
+#       TEUTH_BRANCH_FLAG="--teuthology-branch $TEUTH_BRANCH"
+#     fi
     teuthology-suite -v \
         $TEUTH_BRANCH_FLAG \
         --ceph-repo https://github.com/ceph/ceph.git \
@@ -39,7 +39,7 @@ if [ -z "$TEUTHOLOGY_WAIT" ]; then
     DISPATCHER_EXIT_FLAG='--exit-on-empty-queue'
     teuthology-queue -m $MACHINE_TYPE -s | \
       python3 -c "import sys, json; assert json.loads(sys.stdin.read())['count'] > 0, 'queue is empty!'"
-fi
+# fi
 teuthology-dispatcher -v \
     --log-dir /teuthology/log \
     --tube $MACHINE_TYPE \

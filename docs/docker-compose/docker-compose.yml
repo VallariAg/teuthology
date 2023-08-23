@@ -35,22 +35,62 @@ services:
         retries: 2
     ports: 
         - 8080:8080
-  pulpito:
-    image: quay.io/ceph-infra/pulpito
-    environment:
-      PULPITO_PADDLES_ADDRESS: http://paddles:8080
+  teuthology_api:
+    build:
+      context: ../../../teuthology-api
+    ports:
+        - 8082:8082
     depends_on:
-        paddles:
-            condition: service_healthy
+        - teuthology
+        - paddles
     links:
+        - teuthology
         - paddles
     healthcheck:
-        test: ["CMD", "curl", "-f", "http://0.0.0.0:8081"]
-        timeout: 5s
-        interval: 10s
-        retries: 2
+      test: [ "CMD", "curl", "-f", "http://0.0.0.0:8082" ]
+      timeout: 5s
+      interval: 10s
+      retries: 2
+    volumes:
+      - ../../../teuthology-api:/teuthology_api/:rw
+  pulpito:
+    build:
+      context: ../../../pulpito-ng
     ports:
         - 8081:8081
+    environment:
+      REACT_APP_PADDLES_SERVER: http://0.0.0.0:8080
+    depends_on:
+      paddles:
+        condition: service_healthy
+      teuthology_api:
+        condition: service_healthy
+    links:
+      - paddles
+      - teuthology_api
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://0.0.0.0:8081" ]
+      timeout: 5s
+      interval: 10s
+      retries: 2
+    volumes: 
+      - ../../../pulpito-ng:/app/:rw 
+  # pulpito:
+  #   image: quay.io/ceph-infra/pulpito
+  #   environment:
+  #     PULPITO_PADDLES_ADDRESS: http://paddles:8080
+  #   depends_on:
+  #       paddles:
+  #           condition: service_healthy
+  #   links:
+  #       - paddles
+  #   healthcheck:
+  #       test: ["CMD", "curl", "-f", "http://0.0.0.0:8081"]
+  #       timeout: 5s
+  #       interval: 10s
+  #       retries: 2
+  #   ports:
+  #       - 8081:8081
   beanstalk:
         build: ../../beanstalk/alpine
         ports:
@@ -79,7 +119,23 @@ services:
       context: ./testnode
       dockerfile: ./Dockerfile
     deploy:
-      replicas: 3
+      replicas: 2
+    depends_on:
+        paddles:
+            condition: service_healthy
+    links:
+      - paddles
+    ports:
+      - "22"
+    environment:
+      SSH_PUBKEY:
+    platform: linux/amd64
+  testnode1:
+    build:
+      context: ./testnode1
+      dockerfile: ./Dockerfile
+    deploy:
+      replicas: 1
     depends_on:
         paddles:
             condition: service_healthy
