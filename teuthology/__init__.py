@@ -24,10 +24,10 @@ try:
 except ImportError:
     pass
 from gevent import monkey
-patch_threads=True
-for arg in sys.argv:
-    if "teuthology_api" in arg:
-        patch_threads=False
+# patch_threads=True
+# for arg in sys.argv:
+#     if "teuthology_api" in arg:
+patch_threads=False
 monkey.patch_all(
     dns=False,
     # Don't patch subprocess to avoid http://tracker.ceph.com/issues/14990
