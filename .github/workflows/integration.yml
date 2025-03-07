@@ -27,4 +27,4 @@ jobs:
         with:
           name: teuthology-logs 
           path: |
-            ${{ env.ARCHIVE_DIR }}/2/*
+            ${{ env.ARCHIVE_DIR }}/*
