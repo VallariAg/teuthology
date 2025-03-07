@@ -20,11 +20,11 @@ jobs:
           DIR=$(ls -d /tmp/archive_dir/root-*)
           SAFE_DIR=${DIR//:/_}  # Replace ":" with "_"
           mv "$DIR" "$SAFE_DIR"
+          echo "ARCHIVE_DIR=$SAFE_DIR" >> $GITHUB_ENV
       - name: Upload teuthology archive logs 
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Save logs
+          name: teuthology-logs 
           path: |
-            /tmp/archive_dir/**/2/*
-            /tmp/archive_dir/*.log
+            ${{ env.ARCHIVE_DIR }}/2/*
