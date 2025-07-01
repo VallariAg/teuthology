@@ -8,6 +8,7 @@ import re
 import time
 
 from humanfriendly import format_timespan
+from tempfile import NamedTemporaryFile
 
 from teuthology import repo_utils
 
@@ -497,6 +498,8 @@ class Run(object):
             os_version = parsed_yaml.get('os_version') or self.base_config.os_version
             exclude_arch = parsed_yaml.get('exclude_arch')
             exclude_os_type = parsed_yaml.get('exclude_os_type')
+            print(f"VALLARI_DEBUG: {parsed_yaml.get('os_type')} {parsed_yaml.get('os_version')} {parsed_yaml.get('sha1')}")
+            print(f"VALLARI_DEBUG: {self.base_config.get('os_type')} {self.base_config.get('os_version')} {self.base_config.get('sha1')}")
 
             if exclude_arch and exclude_arch == arch:
                 log.info('Skipping due to excluded_arch: %s facets %s',
@@ -641,6 +644,15 @@ Note: If you still want to go ahead, use --job-threshold 0'''
             base_config=self.base_config,
             seed=self.args.seed,
             suite_name=suite_name))
+        
+        # create, but do not write, the temp file here, so it can be
+        # added to the args in collect_jobs, but not filled until
+        # any backtracking is done
+        base_yaml_path = NamedTemporaryFile(
+            prefix='schedule_suite_', delete=False
+        ).name
+        self.base_yaml_paths.insert(0, base_yaml_path)
+
 
         # compute job limit in respect of --sleep-before-teardown
         job_limit = self.args.limit or 0
@@ -712,6 +724,9 @@ Note: If you still want to go ahead, use --job-threshold 0'''
                     dry_run=self.args.dry_run,
                 )
 
+        with open(base_yaml_path, 'w+b') as base_yaml:
+            base_yaml.write(str(self.base_config).encode())
+
         if jobs_to_schedule:
             self.write_rerun_memo()
 
@@ -722,6 +737,8 @@ Note: If you still want to go ahead, use --job-threshold 0'''
         self.check_num_jobs(len(jobs_to_schedule))
 
         self.schedule_jobs(jobs_missing_packages, jobs_to_schedule, name)
+
+        os.remove(base_yaml_path)
 
         count = len(jobs_to_schedule)
         missing_count = len(jobs_missing_packages)
