@@ -483,6 +483,15 @@ class Run(object):
         if num_jobs:
             self.write_result()
 
+    def update_key(self, key_to_update, a, b):
+        # update all keys from b to a
+        for key, value in b.items():
+            if key == key_to_update:
+                a[key] = value
+            elif isinstance(value, dict):
+                if key in a and isinstance(a[key], dict):
+                    self.update_sha1(key_to_update, a[key], value)
+
     def collect_jobs(self, arch, configs, newest=False, limit=0):
         jobs_to_schedule = []
         jobs_missing_packages = []
@@ -506,6 +515,8 @@ class Run(object):
                 log.info('Skipping due to excluded_os_type: %s facets %s',
                          exclude_os_type, description)
                 continue
+            # parsed_yaml.sha1 = self.base_config.sha1
+            self.update_key('sha1', parsed_yaml, self.base_config) 
 
             arg = copy.deepcopy(self.base_args)
             arg.extend([
