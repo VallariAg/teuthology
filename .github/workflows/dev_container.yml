@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - "*"
   workflow_dispatch:
 
 jobs:
@@ -25,7 +26,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4
         env:
-          QUAY_URI: quay.io/ceph-infra/teuthology-dev
+          QUAY_URI: quay.io/vallari/teuthology-dev
           QUAY_TAG: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
         with:
           context: .
